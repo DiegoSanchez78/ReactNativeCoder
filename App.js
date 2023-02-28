@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useEffect, useState} from 'react';
-import { Button, FlatList, Pressable, StyleSheet, Text, TextInput, View ,Modal } from 'react-native';
+import { Button, StyleSheet, Text, View ,Modal } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { List, NewItemHeader } from './src/components';
 
 export default function App() {
 
@@ -27,9 +29,10 @@ const selecItem = (item) => {
   //   console.log('itemText', itemText)
   // },[itemText])
 
+  //debuguear con use effect}
   useEffect( ()=> {
-    console.log('items', items)
-  },[items])
+    console.log('items',itemText, items)
+  },[itemText,items])
 
 
   //tomar valor del input
@@ -39,27 +42,23 @@ const selecItem = (item) => {
 
   //funcion del boton agregar0
   const addItem = () => {
+    console.log("addItem start",JSON.stringify({itemText,items}))
     setItems (oldArry => [...oldArry, {id: Date.now(),value: itemText}]);
     setItemText('');
+    console.log("addItem end",itemText)
   }
 
   return (
    
     <View style={styles.screen}>
-      <Text style={{flex:0}}>Proyecto</Text>
-      <View style={styles.inputContainer}>
-        <TextInput 
-        placeholder='Item de la lista' 
-        style={styles.input}
+      <NewItemHeader
         onChangeText={onChangeText}
-        value={itemText}
-        />
-        <Button title='Agregar'
-        onPress={addItem}
-        />
-      </View>
-      
-          <FlatList
+        itemText={itemText}
+        addItem={addItem}
+      />
+      <Text style={styles.textElimnar}>Si desea eliminar clickear el producto</Text>
+         <List items={items} selecItem={selecItem} />
+          {/* <FlatList
             data= {items}
             renderItem={(itemData) => (
               <Pressable style={styles.contentList} onPress={()=>{ 
@@ -69,18 +68,18 @@ const selecItem = (item) => {
               </Pressable>
             )}  
              >
-          </FlatList>
+          </FlatList> */}
           <Modal
             animationType='slide'
             transparent={true}
             visible={modalVisible}>
 
               <View style={styles.modalContainer}>
-                <View style={styles.modalTitle}>
-                  <Text>Eliminar Item</Text>
-                </View>
-                  <View style={styles.modalContainer}>
-                    <Text>Esta seguro que desea eliminar el item {selectedItem?.value} ?</Text>
+                {/* <View style={styles.modalTitle}>
+                  <Text >Eliminar el producto : </Text>
+                </View> */}
+                  <View style={styles.modalContainerProduct}>
+                    <Text style={styles.textProductDelete} >Esta seguro que desea eliminar el producto : {`\n`}{`\n`}{selectedItem?.value} ?</Text>
                 </View>
                 <View style={styles.modalAction}>
                   <Button title='Cancelar' onPress={() => {
@@ -94,7 +93,7 @@ const selecItem = (item) => {
 
               </View>
           </Modal>
-    
+          
     </View>
   );
 }
@@ -103,35 +102,42 @@ const styles = StyleSheet.create({
   screen: {
     padding:30,
   },
-  inputContainer:{
-    marginTop: 30,
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center'
-  },
-  input:{
-    width:'70%',
-    height: 40,
-    borderBottomColor:'black',
-    borderBottomWidth:1,
-  },
+  // inputContainer:{
+  //   marginTop: 30,
+  //   flexDirection:'row',
+  //   justifyContent:'space-between',
+  //   alignItems:'center'
+  // },
+  // input:{
+  //   width:'70%',
+  //   height: 40,
+  //   borderBottomColor:'black',
+  //   borderBottomWidth:1,
+  // },
   itemContainer:{
     marginTop:30,
     width:'100%',
     height: 40,
     alignItems:'center',
   },
-  contentList:{
-    padding:10,
-    borderRadius:5,
-    backgroundColor:"#ccc"
-  },
+  // contentList:{
+  //   padding:10,
+  //   borderRadius:5,
+  //   backgroundColor:"#ccc"
+  // },
   modalContainer:{
-    height:200,
+    height:100,
     width:300,
-    marginTop: 150,
+    marginTop: 400,
     alignSelf:'center',
-    backgroundColor:'gray'
+    
+  },
+  modalContainerProduct:{
+    height:100,
+    width:300,
+    alignSelf:'center',
+    backgroundColor:'#94FEF8',
+
   },
   modalTitle: {
     backgroundColor: "#ccc",
@@ -142,9 +148,20 @@ const styles = StyleSheet.create({
     width:'50%'
   },
   modalAction: {
-    marginTop:30,
+    // marginTop:30,
     flex:0,
     borderRadius:10
   },
+  textElimnar:{
+    textAlign:'center',
+    padding:10,
+    color:'gray'
+  },
+  textProductDelete:{
+    textAlign:'center',
+    marginTop:'10%'
+    
+    
+  }
   
 });
